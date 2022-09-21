@@ -17,7 +17,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepo;
 
-    @GetMapping("")
+    @GetMapping("home")
     public String viewHomePage() {
         return "index";
     }
@@ -39,8 +39,20 @@ public class UserController {
         return "register_success";
     }
 
+    @PostMapping("/loginUser")
+    public String processLogin(UserLoginData user) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+
+//        userRepo.save(user);
+
+        return "login";
+    }
+
     @GetMapping("/users")
     public String listUsers(Model model) {
+
         List<User> listUsers = userRepo.findAll();
         model.addAttribute("listUsers", listUsers);
 
